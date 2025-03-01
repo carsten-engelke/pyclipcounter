@@ -7,7 +7,7 @@ Be creative! do whatever you want!
 - Start a web application
 - Import things from your .base module
 """
-
+from clipcountergui import PyClipCounter
 
 def main():  # pragma: no cover
     """
@@ -25,4 +25,5 @@ def main():  # pragma: no cover
         * List all available tasks
         * Run an application (Flask, FastAPI, Django, etc.)
     """
-    print("This will do something")
+    app = PyClipCounter()
+    app.run()

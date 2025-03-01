@@ -2,7 +2,7 @@
 import pathlib
 import tkinter as tk
 import pygubu
-from pyclipcounterui import PyClipCounterUI
+from clipcounterguiui import PyClipCounterUI
 
 
 class PyClipCounter(PyClipCounterUI):

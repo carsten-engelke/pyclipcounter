@@ -4,7 +4,7 @@
     <settings>
       <setting id="name">PyClipCounter</setting>
       <setting id="description">Fill the clipboard with automatically counting texts. Label stuff on your computer like in the store.</setting>
-      <setting id="module_name">pyclipcounter</setting>
+      <setting id="module_name">clipcountergui</setting>
       <setting id="template">application</setting>
       <setting id="main_widget">Tk1</setting>
       <setting id="main_classname">PyClipCounter</setting>
@@ -24,10 +24,13 @@
   <object class="tk.Tk" id="Tk1">
     <property name="height">400</property>
     <property name="width">600</property>
+    <containerlayout manager="grid">
+      <property type="col" id="1" name="weight">1</property>
+    </containerlayout>
     <child>
       <object class="ttk.Labelframe" id="Labelframe1">
         <property name="height">200</property>
-        <property name="text" translatable="yes">Input</property>
+        <property name="text" translatable="yes">Clipboard Input</property>
         <property name="width">200</property>
         <layout manager="grid">
           <property name="column">0</property>
@@ -35,94 +38,243 @@
           <property name="row">0</property>
           <property name="sticky">nsew</property>
         </layout>
-        <containerlayout manager="grid">
-          <property type="col" id="0" name="weight">1</property>
-        </containerlayout>
         <child>
-          <object class="ttk.Entry" id="Entry1">
+          <object class="ttk.Labelframe" id="labelframe1">
+            <property name="height">200</property>
+            <property name="text" translatable="yes">Create Clips from Template</property>
+            <property name="width">200</property>
             <layout manager="grid">
               <property name="column">0</property>
               <property name="row">0</property>
-              <property name="sticky">ew</property>
+              <property name="sticky">nsew</property>
             </layout>
+            <containerlayout manager="grid">
+              <property type="col" id="1" name="weight">1</property>
+              <property type="row" id="8" name="weight">1</property>
+            </containerlayout>
+            <child>
+              <object class="ttk.Label" id="label6">
+                <property name="text" translatable="yes">Clip Template:</property>
+                <layout manager="grid">
+                  <property name="column">0</property>
+                  <property name="row">0</property>
+                  <property name="sticky">w</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Entry" id="Entry1">
+                <property name="text" translatable="yes">File&lt;&gt;</property>
+                <property name="textvariable">string:ClipTemplate</property>
+                <layout manager="grid">
+                  <property name="column">1</property>
+                  <property name="row">0</property>
+                  <property name="sticky">ew</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Separator" id="separator1">
+                <property name="orient">horizontal</property>
+                <layout manager="grid">
+                  <property name="column">0</property>
+                  <property name="columnspan">2</property>
+                  <property name="row">1</property>
+                  <property name="sticky">ew</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Label" id="label2">
+                <property name="text" translatable="yes">Numbers (for "&lt;&gt;")</property>
+                <layout manager="grid">
+                  <property name="column">0</property>
+                  <property name="columnspan">2</property>
+                  <property name="row">2</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Label" id="Label1">
+                <property name="text" translatable="yes">Start:</property>
+                <layout manager="grid">
+                  <property name="column">0</property>
+                  <property name="row">3</property>
+                  <property name="sticky">w</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Entry" id="Entry2">
+                <property name="text" translatable="yes">1</property>
+                <property name="textvariable">int:countStart</property>
+                <layout manager="grid">
+                  <property name="column">1</property>
+                  <property name="row">3</property>
+                  <property name="sticky">ew</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Label" id="label1">
+                <property name="text" translatable="yes">Current:</property>
+                <layout manager="grid">
+                  <property name="column">0</property>
+                  <property name="row">4</property>
+                  <property name="sticky">w</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Entry" id="entry1">
+                <property name="text" translatable="yes">1</property>
+                <property name="textvariable">int:countCurrent</property>
+                <layout manager="grid">
+                  <property name="column">1</property>
+                  <property name="row">4</property>
+                  <property name="sticky">ew</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Label" id="Label2">
+                <property name="text" translatable="yes">End:</property>
+                <layout manager="grid">
+                  <property name="column">0</property>
+                  <property name="row">5</property>
+                  <property name="sticky">w</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Entry" id="Entry3">
+                <property name="text" translatable="yes">100</property>
+                <property name="textvariable">int:CountEnd</property>
+                <layout manager="grid">
+                  <property name="column">1</property>
+                  <property name="row">5</property>
+                  <property name="sticky">ew</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Checkbutton" id="Checkbutton1">
+                <property name="text" translatable="yes">Use leading zeroes (e.g. "001")</property>
+                <property name="variable">boolean:isUsingLeadingZeroes</property>
+                <layout manager="grid">
+                  <property name="column">0</property>
+                  <property name="columnspan">2</property>
+                  <property name="row">6</property>
+                  <property name="sticky">ew</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Label" id="Label3">
+                <property name="text" translatable="yes">Texts (for "&lt;txt&gt;"):</property>
+                <layout manager="grid">
+                  <property name="column">0</property>
+                  <property name="columnspan">2</property>
+                  <property name="row">7</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="tk.ScrolledText" id="Scrolledtext1">
+                <property name="height">0</property>
+                <layout manager="grid">
+                  <property name="column">0</property>
+                  <property name="columnspan">2</property>
+                  <property name="row">8</property>
+                  <property name="sticky">nsew</property>
+                </layout>
+              </object>
+            </child>
           </object>
         </child>
         <child>
-          <object class="ttk.Button" id="Button2">
-            <property name="text" translatable="yes">Button2</property>
+          <object class="ttk.Labelframe" id="labelframe3">
+            <property name="height">200</property>
+            <property name="text" translatable="yes">Create Clips from Textfile</property>
+            <property name="width">200</property>
             <layout manager="grid">
-              <property name="column">1</property>
-              <property name="row">0</property>
+              <property name="column">0</property>
+              <property name="row">1</property>
               <property name="sticky">nsew</property>
             </layout>
+            <containerlayout manager="grid">
+              <property type="col" id="1" name="weight">1</property>
+              <property type="row" id="1" name="weight">1</property>
+            </containerlayout>
+            <child>
+              <object class="ttk.Entry" id="entry2">
+                <property name="state">readonly</property>
+                <property name="textvariable">string:TextFileName</property>
+                <layout manager="grid">
+                  <property name="column">0</property>
+                  <property name="columnspan">2</property>
+                  <property name="row">0</property>
+                  <property name="sticky">ew</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Button" id="button1">
+                <property name="text" translatable="yes">Load Textfile</property>
+                <layout manager="grid">
+                  <property name="column">2</property>
+                  <property name="row">0</property>
+                  <property name="sticky">ew</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="tk.Frame" id="frame1">
+                <property name="height">200</property>
+                <property name="width">200</property>
+                <layout manager="grid">
+                  <property name="column">0</property>
+                  <property name="columnspan">4</property>
+                  <property name="row">1</property>
+                  <property name="sticky">nsew</property>
+                </layout>
+                <child>
+                  <object class="tk.Listbox" id="ListBox" named="True">
+                    <property name="justify">left</property>
+                    <property name="listvariable">string:ClipList</property>
+                    <property name="state">disabled</property>
+                    <layout manager="pack">
+                      <property name="expand">True</property>
+                      <property name="fill">both</property>
+                      <property name="side">left</property>
+                    </layout>
+                  </object>
+                </child>
+                <child>
+                  <object class="tk.Scrollbar" id="ScrollListBox" named="True">
+                    <property name="orient">vertical</property>
+                    <layout manager="pack">
+                      <property name="expand">false</property>
+                      <property name="fill">y</property>
+                      <property name="side">right</property>
+                    </layout>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="tk.Button" id="button2">
+                <property name="image">user-trash.png</property>
+                <property name="text" translatable="yes">Unload</property>
+                <layout manager="grid">
+                  <property name="column">3</property>
+                  <property name="row">0</property>
+                  <property name="sticky">ew</property>
+                </layout>
+              </object>
+            </child>
           </object>
         </child>
-      </object>
-    </child>
-    <child>
-      <object class="ttk.Label" id="Label1">
-        <property name="text" translatable="yes">Label1</property>
-        <layout manager="grid">
-          <property name="column">0</property>
-          <property name="row">1</property>
-        </layout>
-      </object>
-    </child>
-    <child>
-      <object class="ttk.Label" id="Label2">
-        <property name="text" translatable="yes">Label2</property>
-        <layout manager="grid">
-          <property name="column">0</property>
-          <property name="row">2</property>
-        </layout>
-      </object>
-    </child>
-    <child>
-      <object class="ttk.Entry" id="Entry2">
-        <layout manager="grid">
-          <property name="column">1</property>
-          <property name="row">1</property>
-          <property name="sticky">ew</property>
-        </layout>
-      </object>
-    </child>
-    <child>
-      <object class="ttk.Entry" id="Entry3">
-        <layout manager="grid">
-          <property name="column">1</property>
-          <property name="row">2</property>
-          <property name="sticky">ew</property>
-        </layout>
-      </object>
-    </child>
-    <child>
-      <object class="ttk.Checkbutton" id="Checkbutton1">
-        <property name="text" translatable="yes">Checkbutton1</property>
-        <layout manager="grid">
-          <property name="column">0</property>
-          <property name="columnspan">2</property>
-          <property name="row">3</property>
-          <property name="sticky">ew</property>
-        </layout>
-      </object>
-    </child>
-    <child>
-      <object class="ttk.Label" id="Label3">
-        <property name="text" translatable="yes">Label3</property>
-        <layout manager="grid">
-          <property name="column">0</property>
-          <property name="row">4</property>
-        </layout>
-      </object>
-    </child>
-    <child>
-      <object class="tk.ScrolledText" id="Scrolledtext1">
-        <property name="height">0</property>
-        <layout manager="grid">
-          <property name="column">1</property>
-          <property name="row">4</property>
-          <property name="sticky">nsew</property>
-        </layout>
       </object>
     </child>
     <child>
@@ -138,7 +290,7 @@
     </child>
     <child>
       <object class="ttk.Label" id="Label4">
-        <property name="text" translatable="yes">Label4</property>
+        <property name="text" translatable="yes">Current Clip:</property>
         <layout manager="grid">
           <property name="column">0</property>
           <property name="row">6</property>
@@ -147,6 +299,7 @@
     </child>
     <child>
       <object class="ttk.Entry" id="Entry5">
+        <property name="state">readonly</property>
         <layout manager="grid">
           <property name="column">1</property>
           <property name="row">6</property>
@@ -180,7 +333,7 @@
         </containerlayout>
         <child>
           <object class="ttk.Button" id="Button4">
-            <property name="text" translatable="yes">Button4</property>
+            <property name="text" translatable="yes">Last Clip</property>
             <layout manager="grid">
               <property name="column">0</property>
               <property name="row">0</property>
@@ -190,7 +343,7 @@
         </child>
         <child>
           <object class="ttk.Button" id="Button5">
-            <property name="text" translatable="yes">Button5</property>
+            <property name="text" translatable="yes">Copy Current Clip</property>
             <layout manager="grid">
               <property name="column">1</property>
               <property name="row">0</property>
@@ -200,7 +353,7 @@
         </child>
         <child>
           <object class="ttk.Button" id="Button6">
-            <property name="text" translatable="yes">Button6</property>
+            <property name="text" translatable="yes">Next Clip</property>
             <layout manager="grid">
               <property name="column">2</property>
               <property name="row">0</property>
@@ -210,7 +363,8 @@
         </child>
         <child>
           <object class="ttk.Checkbutton" id="Checkbutton2">
-            <property name="text" translatable="yes">Checkbutton2</property>
+            <property name="text" translatable="yes">Automatically put next Clip after Paste from Clipboard</property>
+            <property name="variable">boolean:isAutomaticallyNext</property>
             <layout manager="grid">
               <property name="column">0</property>
               <property name="columnspan">3</property>
@@ -222,12 +376,24 @@
       </object>
     </child>
     <child>
-      <object class="ttk.Label" id="Label5">
-        <property name="text" translatable="yes">Label5</property>
+      <object class="ttk.Separator" id="separator2">
+        <property name="orient">horizontal</property>
         <layout manager="grid">
           <property name="column">0</property>
           <property name="columnspan">2</property>
           <property name="row">9</property>
+          <property name="sticky">ew</property>
+        </layout>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Label" id="labelMessage" named="True">
+        <property name="text" translatable="yes">Usage of template replaces "&lt;&gt;" with numbers and "&lt;txt&gt;" with texts.</property>
+        <property name="textvariable">string:message</property>
+        <layout manager="grid">
+          <property name="column">0</property>
+          <property name="columnspan">2</property>
+          <property name="row">10</property>
           <property name="sticky">ew</property>
         </layout>
       </object>
