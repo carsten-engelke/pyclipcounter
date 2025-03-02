@@ -2,6 +2,8 @@
 
 alot... did not alter template text...
 
+Upcoming:
+
 Todos:
 - clips from text files.
 - activate pyperclip
