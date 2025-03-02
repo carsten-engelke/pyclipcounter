@@ -69,7 +69,7 @@
             <child>
               <object class="ttk.Entry" id="Entry1">
                 <property name="text" translatable="yes">File&lt;&gt;</property>
-                <property name="textvariable">string:ClipTemplate</property>
+                <property name="textvariable">string:clipTemplate</property>
                 <layout manager="grid">
                   <property name="column">1</property>
                   <property name="row">0</property>
@@ -153,7 +153,7 @@
             <child>
               <object class="ttk.Entry" id="Entry3">
                 <property name="text" translatable="yes">100</property>
-                <property name="textvariable">int:CountEnd</property>
+                <property name="textvariable">int:countEnd</property>
                 <layout manager="grid">
                   <property name="column">1</property>
                   <property name="row">5</property>
@@ -170,27 +170,6 @@
                   <property name="columnspan">2</property>
                   <property name="row">6</property>
                   <property name="sticky">ew</property>
-                </layout>
-              </object>
-            </child>
-            <child>
-              <object class="ttk.Label" id="Label3">
-                <property name="text" translatable="yes">Texts (for "&lt;txt&gt;"):</property>
-                <layout manager="grid">
-                  <property name="column">0</property>
-                  <property name="columnspan">2</property>
-                  <property name="row">7</property>
-                </layout>
-              </object>
-            </child>
-            <child>
-              <object class="tk.ScrolledText" id="Scrolledtext1">
-                <property name="height">0</property>
-                <layout manager="grid">
-                  <property name="column">0</property>
-                  <property name="columnspan">2</property>
-                  <property name="row">8</property>
-                  <property name="sticky">nsew</property>
                 </layout>
               </object>
             </child>
@@ -247,6 +226,7 @@
                   <object class="tk.Listbox" id="ListBox" named="True">
                     <property name="justify">left</property>
                     <property name="listvariable">string:ClipList</property>
+                    <property name="selectmode">single</property>
                     <property name="state">disabled</property>
                     <layout manager="pack">
                       <property name="expand">True</property>
@@ -399,7 +379,7 @@
     </child>
     <child>
       <object class="ttk.Label" id="labelMessage" named="True">
-        <property name="text" translatable="yes">Usage of template replaces "&lt;&gt;" with numbers and "&lt;txt&gt;" with texts.</property>
+        <property name="text" translatable="yes">Usage of template replaces "&lt;&gt;" with numbers.</property>
         <property name="textvariable">string:message</property>
         <layout manager="grid">
           <property name="column">0</property>

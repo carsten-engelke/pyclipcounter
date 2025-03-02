@@ -2,6 +2,12 @@
 
 alot... did not alter template text...
 
+Todos:
+- clips from text files.
+- activate pyperclip
+- Monitor countCurrent Entry -> (via variable?)
+- monitor Ctrl + V for next clip action.
+
 
 # Python Project Template
 
