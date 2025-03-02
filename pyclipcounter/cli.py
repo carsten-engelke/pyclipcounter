@@ -7,7 +7,7 @@ Be creative! do whatever you want!
 - Start a web application
 - Import things from your .base module
 """
-from clipcountergui import PyClipCounter
+from pyclipcounter.app import PyClipCounter
 
 def main():  # pragma: no cover
     """

@@ -4,7 +4,7 @@
     <settings>
       <setting id="name">PyClipCounter</setting>
       <setting id="description">Fill the clipboard with automatically counting texts. Label stuff on your computer like in the store.</setting>
-      <setting id="module_name">clipcountergui</setting>
+      <setting id="module_name">app</setting>
       <setting id="template">application</setting>
       <setting id="main_widget">Tk1</setting>
       <setting id="main_classname">PyClipCounter</setting>
@@ -15,17 +15,18 @@
       <setting id="use_ttk_styledefinition_file">False</setting>
       <setting id="use_i18n">False</setting>
       <setting id="all_ids_attributes">False</setting>
-      <setting id="generate_code_onsave">True</setting>
+      <setting id="generate_code_onsave">False</setting>
       <setting id="use_window_centering_code">False</setting>
       <setting id="ttk_style_definition_file" />
     </settings>
     <customwidgets />
   </project>
   <object class="tk.Tk" id="Tk1">
-    <property name="height">400</property>
-    <property name="width">600</property>
+    <property name="iconbitmap">copy-to-clipboard.ico</property>
+    <property name="title" translatable="yes">pyclipcounter</property>
     <containerlayout manager="grid">
       <property type="col" id="1" name="weight">1</property>
+      <property type="row" id="7" name="weight">1</property>
     </containerlayout>
     <child>
       <object class="ttk.Labelframe" id="Labelframe1">
@@ -38,8 +39,11 @@
           <property name="row">0</property>
           <property name="sticky">nsew</property>
         </layout>
+        <containerlayout manager="grid">
+          <property type="col" id="0" name="weight">1</property>
+        </containerlayout>
         <child>
-          <object class="ttk.Labelframe" id="labelframe1">
+          <object class="ttk.Labelframe" id="TemplateFrame" named="True">
             <property name="height">200</property>
             <property name="text" translatable="yes">Create Clips from Template</property>
             <property name="width">200</property>
@@ -220,6 +224,7 @@
             </child>
             <child>
               <object class="ttk.Button" id="button1">
+                <property name="command" type="command" cbtype="simple">loadTextFile</property>
                 <property name="text" translatable="yes">Load Textfile</property>
                 <layout manager="grid">
                   <property name="column">2</property>
@@ -264,6 +269,8 @@
             </child>
             <child>
               <object class="tk.Button" id="button2">
+                <property name="bitmap">error</property>
+                <property name="command" type="command" cbtype="simple">unloadTextFile</property>
                 <property name="image">user-trash.png</property>
                 <property name="text" translatable="yes">Unload</property>
                 <layout manager="grid">
@@ -283,7 +290,7 @@
         <layout manager="grid">
           <property name="column">0</property>
           <property name="columnspan">2</property>
-          <property name="row">5</property>
+          <property name="row">4</property>
           <property name="sticky">ew</property>
         </layout>
       </object>
@@ -293,7 +300,7 @@
         <property name="text" translatable="yes">Current Clip:</property>
         <layout manager="grid">
           <property name="column">0</property>
-          <property name="row">6</property>
+          <property name="row">5</property>
         </layout>
       </object>
     </child>
@@ -302,7 +309,7 @@
         <property name="state">readonly</property>
         <layout manager="grid">
           <property name="column">1</property>
-          <property name="row">6</property>
+          <property name="row">5</property>
           <property name="sticky">ew</property>
         </layout>
       </object>
@@ -313,7 +320,7 @@
         <layout manager="grid">
           <property name="column">0</property>
           <property name="columnspan">2</property>
-          <property name="row">7</property>
+          <property name="row">6</property>
           <property name="sticky">ew</property>
         </layout>
       </object>
@@ -323,17 +330,19 @@
         <layout manager="grid">
           <property name="column">0</property>
           <property name="columnspan">2</property>
-          <property name="row">8</property>
+          <property name="row">7</property>
           <property name="sticky">nsew</property>
         </layout>
         <containerlayout manager="grid">
           <property type="col" id="0" name="weight">1</property>
           <property type="col" id="1" name="weight">1</property>
           <property type="col" id="2" name="weight">10</property>
+          <property type="row" id="0" name="weight">1</property>
         </containerlayout>
         <child>
           <object class="ttk.Button" id="Button4">
-            <property name="text" translatable="yes">Last Clip</property>
+            <property name="command" type="command" cbtype="simple">copyLastClip</property>
+            <property name="text" translatable="yes">Copy Last Clip</property>
             <layout manager="grid">
               <property name="column">0</property>
               <property name="row">0</property>
@@ -343,6 +352,7 @@
         </child>
         <child>
           <object class="ttk.Button" id="Button5">
+            <property name="command" type="command" cbtype="simple">copyCurrentClip</property>
             <property name="text" translatable="yes">Copy Current Clip</property>
             <layout manager="grid">
               <property name="column">1</property>
@@ -353,7 +363,8 @@
         </child>
         <child>
           <object class="ttk.Button" id="Button6">
-            <property name="text" translatable="yes">Next Clip</property>
+            <property name="command" type="command" cbtype="simple">copyNextClip</property>
+            <property name="text" translatable="yes">Copy Next Clip</property>
             <layout manager="grid">
               <property name="column">2</property>
               <property name="row">0</property>
@@ -381,7 +392,7 @@
         <layout manager="grid">
           <property name="column">0</property>
           <property name="columnspan">2</property>
-          <property name="row">9</property>
+          <property name="row">8</property>
           <property name="sticky">ew</property>
         </layout>
       </object>
@@ -393,7 +404,7 @@
         <layout manager="grid">
           <property name="column">0</property>
           <property name="columnspan">2</property>
-          <property name="row">10</property>
+          <property name="row">9</property>
           <property name="sticky">ew</property>
         </layout>
       </object>
