@@ -34,6 +34,10 @@ class PyClipCounterUI:
         self.clipIndex = 0
         self.var("isUsingLeadingZeroes").set(True)
         self.var("isAutomaticallyNext").set(True)
+        # Initiate variable listeners
+        self.var("countCurrent").trace_add("write", self.manualUpdateTemplateIndex)
+        self.obj("ListBox").bind("<<ListboxSelect>>", self.manualUpdateTextFileIndex)
+
 
     def run(self):
         self.mainwindow.mainloop()
@@ -44,6 +48,17 @@ class PyClipCounterUI:
     def var(self, id):
         return self.builder.get_variable(id)
 
+    #working but throwing exception when empty entry.
+    def manualUpdateTemplateIndex(s, index, mode, caller):
+        print(str(s) + " index:" + str(index) + " mode:" + str(mode) + " caller:" + str(caller) + " newValue:" + str(s.var("countCurrent").get()))
+        if s.var("countCurrent").get() != "":
+            s.clipIndex = s.var("countCurrent").get()
+        
+    #still not working properly todo: repair!
+    def manualUpdateTextFileIndex(s, event):
+        s.clipIndex = s.obj("ListBox").curselection[0]
+
+
     def loadTextFile(self):
         filetypes = [('text files', '*.txt')]
         f = filedialog.askopenfile(title='Open a text file. Each line defines one clip',
@@ -51,12 +66,13 @@ class PyClipCounterUI:
                                    filetypes=filetypes)
         if f != None:
             try:
-                cliplist = self.var("ClipList")
+                textClips = self.var("textClips")
                 filelist = list()
                 with open(f.name) as txtfile:
                     for line in txtfile:
+                        line = line.strip("\n").strip(os.linesep)
                         filelist.append(line)
-                cliplist.set(filelist)
+                textClips.set(filelist)
                 self.var("TextFileName").set(f.name)
                 self.switchUseTemplate(False)
             except:
@@ -66,23 +82,23 @@ class PyClipCounterUI:
         if doUseTemplate:
             self.useTemplate = True
             self.var("TextFileName").set("")
-            self.var("ClipList").set(list())
+            self.var("textClips").set(list())
             templateFrame = self.obj("TemplateFrame")
             for child in templateFrame.winfo_children():
                 try:
-                    child.configure(state="enable")
+                    child.configure(state=tk.NORMAL)
                 except:
                     print("failed" + str(child))
-            # self.obj("ListBox").configure(state="disabled")
+            self.obj("ListBox").configure(state=tk.DISABLED)
         else:
             self.useTemplate = False
             templateFrame = self.builder.get_object("TemplateFrame")
             for child in templateFrame.winfo_children():
                 try:
-                    child.configure(state="disabled")
+                    child.configure(state=tk.DISABLED)
                 except:
                     print("failed:" + str(child))
-            # self.obj("ListBox").configure(state="enable")
+            self.obj("ListBox").configure(state=tk.NORMAL)
 
     def unloadTextFile(self):
         self.switchUseTemplate(True)
@@ -100,9 +116,13 @@ class PyClipCounterUI:
             self.var("countCurrent").set(self.var("countStart").get())
 
     def setClipIndexTextFile(self, newIndex):
-        if len(self.var("ClipList")) > 0 and newIndex < len(self.var("ClipList")):
-            self.clipIndex = newIndex
-            self.obj("ListBox").activate(newIndex)
+        if len(self.var("textClips").get()) > 0:
+            if newIndex < len(self.var("textClips").get()):
+                self.clipIndex = newIndex
+                self.obj("ListBox").activate(newIndex)
+            else: 
+                self.clipIndex = len(self.var("textClips").get()) - 1
+                self.obj("ListBox").activate(newIndexlen(self.var("textClips").get()) - 1)
 
     def copyTemplateClip(self):
         s = self.var("clipTemplate").get()
@@ -111,11 +131,14 @@ class PyClipCounterUI:
             maxlen = math.floor(math.log10(self.var("countEnd").get()))
             snumber = (maxlen - math.floor(math.log10(self.clipIndex))) * "0" + str(self.clipIndex)
         s = s.replace("<>", snumber)
-        print("Copy Template Clip:" + s)
+        pyperclip.copy(s)
         
 
-    def copyTextclip(self):
-        print("Copy Text Clip:" + str(self.clipIndex))
+    def copyTextClip(self):
+        s = self.var("textClips").get()
+        print (s)
+        pyperclip.copy(s)
+
 
 
     def copyLastClip(self):

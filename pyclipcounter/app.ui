@@ -225,7 +225,7 @@
                 <child>
                   <object class="tk.Listbox" id="ListBox" named="True">
                     <property name="justify">left</property>
-                    <property name="listvariable">string:ClipList</property>
+                    <property name="listvariable">string:textClips</property>
                     <property name="selectmode">single</property>
                     <property name="state">disabled</property>
                     <layout manager="pack">
