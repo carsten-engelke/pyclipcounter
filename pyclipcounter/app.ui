@@ -111,7 +111,7 @@
             <child>
               <object class="ttk.Entry" id="Entry2">
                 <property name="text" translatable="yes">1</property>
-                <property name="textvariable">int:countStart</property>
+                <property name="textvariable">string:countStart</property>
                 <layout manager="grid">
                   <property name="column">1</property>
                   <property name="row">3</property>
@@ -132,7 +132,7 @@
             <child>
               <object class="ttk.Entry" id="entry1">
                 <property name="text" translatable="yes">1</property>
-                <property name="textvariable">int:countCurrent</property>
+                <property name="textvariable">string:countCurrent</property>
                 <layout manager="grid">
                   <property name="column">1</property>
                   <property name="row">4</property>
@@ -153,7 +153,7 @@
             <child>
               <object class="ttk.Entry" id="Entry3">
                 <property name="text" translatable="yes">100</property>
-                <property name="textvariable">int:countEnd</property>
+                <property name="textvariable">string:countEnd</property>
                 <layout manager="grid">
                   <property name="column">1</property>
                   <property name="row">5</property>

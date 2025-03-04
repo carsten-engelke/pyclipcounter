@@ -48,11 +48,12 @@ class PyClipCounterUI:
     def var(self, id):
         return self.builder.get_variable(id)
 
-    #working but throwing exception when empty entry.
     def manualUpdateTemplateIndex(s, index, mode, caller):
-        print(str(s) + " index:" + str(index) + " mode:" + str(mode) + " caller:" + str(caller) + " newValue:" + str(s.var("countCurrent").get()))
-        if s.var("countCurrent").get() != "":
-            s.clipIndex = s.var("countCurrent").get()
+        print(str(s) + " index:" + str(index) + " mode:" + str(mode) + " caller:" + str(caller) + " newValue:" + s.var("countCurrent").get())
+        try:
+            s.clipIndex = int(s.var("countCurrent").get())
+        except Exception as e:
+            print(e.with_traceback())
         
     #still not working properly todo: repair!
     def manualUpdateTextFileIndex(s, event):
@@ -104,33 +105,44 @@ class PyClipCounterUI:
         self.switchUseTemplate(True)
 
     def setClipIndexTemplate(self, newIndex):
-        if newIndex >= self.var("countStart").get():
-            if newIndex <= self.var("countEnd").get():
-                self.clipIndex = newIndex
-                self.var("countCurrent").set(newIndex)
+        try:
+            if newIndex >= int(self.var("countStart").get()):
+                if newIndex <= int(self.var("countEnd").get()):
+                    self.clipIndex = newIndex
+                    self.var("countCurrent").set(str(newIndex))
+                else:
+                    self.clipIndex = int(self.var("countEnd").get())
+                    self.var("countCurrent").set(self.var("countEnd").get())
             else:
-                self.clipIndex = self.var("countEnd").get()
-                self.var("countCurrent").set(self.var("countEnd").get())
-        else:
-            self.clipIndex = self.var("countStart").get()
-            self.var("countCurrent").set(self.var("countStart").get())
+                self.clipIndex = int(self.var("countStart").get())
+                self.var("countCurrent").set(self.var("countStart").get())
+            return True
+        except Exception as e:
+            return False
 
     def setClipIndexTextFile(self, newIndex):
-        if len(self.var("textClips").get()) > 0:
-            if newIndex < len(self.var("textClips").get()):
-                self.clipIndex = newIndex
-                self.obj("ListBox").activate(newIndex)
-            else: 
-                self.clipIndex = len(self.var("textClips").get()) - 1
-                self.obj("ListBox").activate(newIndexlen(self.var("textClips").get()) - 1)
+        try:
+            if len(self.var("textClips").get()) > 0:
+                if newIndex < len(self.var("textClips").get()):
+                    self.clipIndex = newIndex
+                    self.obj("ListBox").activate(newIndex)
+                else: 
+                    self.clipIndex = len(self.var("textClips").get()) - 1
+                    self.obj("ListBox").activate(len(self.var("textClips").get()) - 1)
+                return True
+            else:
+                return False
+        except Exception as e:
+            return False
 
     def copyTemplateClip(self):
         s = self.var("clipTemplate").get()
         snumber = str(self.clipIndex)
         if self.var("isUsingLeadingZeroes").get():
-            maxlen = math.floor(math.log10(self.var("countEnd").get()))
+            maxlen = math.floor(math.log10(int(self.var("countEnd").get())))
             snumber = (maxlen - math.floor(math.log10(self.clipIndex))) * "0" + str(self.clipIndex)
         s = s.replace("<>", snumber)
+        print(s)
         pyperclip.copy(s)
         
 
@@ -143,17 +155,15 @@ class PyClipCounterUI:
 
     def copyLastClip(self):
         newIndex = self.clipIndex - 1
-        if self.useTemplate:
-            self.setClipIndexTemplate(newIndex)
-            self.copyTemplateClip()
+        if self.useTemplate and self.setClipIndexTemplate(newIndex):
+                self.copyTemplateClip()
         else:
-            self.setClipIndexTextFile(newIndex)
-            self.copyTextClip()
+            if self.setClipIndexTextFile(newIndex):
+                self.copyTextClip()
 
 
     def copyCurrentClip(self):
-        if self.useTemplate:
-            self.setClipIndexTemplate(self.clipIndex)
+        if self.useTemplate and self.setClipIndexTemplate(self.clipIndex):
             self.copyTemplateClip()
         else:
             self.setClipIndexTextFile(self.clipIndex)
@@ -161,8 +171,7 @@ class PyClipCounterUI:
 
     def copyNextClip(self):
         newIndex = self.clipIndex + 1
-        if self.useTemplate:
-            self.setClipIndexTemplate(newIndex)
+        if self.useTemplate and self.setClipIndexTemplate(newIndex):
             self.copyTemplateClip()
         else:
             self.setClipIndexTextFile(newIndex)
