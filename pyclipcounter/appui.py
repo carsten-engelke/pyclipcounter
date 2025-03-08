@@ -114,15 +114,15 @@ class PyClipCounterUI:
         self.switchUseTemplate(True)
 
     def setClipIndexTemplate(self, newIndex):
-        if newIndex >= self.var("countStart").get():
-            if newIndex <= self.var("countEnd").get():
+        if newIndex >= int(self.var("countStart").get()):
+            if newIndex <= int(self.var("countEnd").get()):
                 self.clipIndex = newIndex
-                self.var("countCurrent").set(newIndex)
+                self.var("countCurrent").set(str(newIndex))
             else:
-                self.clipIndex = self.var("countEnd").get()
+                self.clipIndex = int(self.var("countEnd").get())
                 self.var("countCurrent").set(self.var("countEnd").get())
         else:
-            self.clipIndex = self.var("countStart").get()
+            self.clipIndex = int(self.var("countStart").get())
             self.var("countCurrent").set(self.var("countStart").get())
 
     def setClipIndexTextFile(self, newIndex):
