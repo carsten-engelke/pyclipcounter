@@ -99,7 +99,7 @@ class PyClipCounterUI:
                 except:
                     print("failed" + str(child))
             self.obj("ListBox").configure(state=tk.DISABLED)
-            self.setClipIndexTemplate(int(self.var("countCurrent").get()))
+            self.setClipIndexTemplate(int(self.var("currentIndex").get()))
         else:
             self.useTemplate = False
             templateFrame = self.builder.get_object("TemplateFrame")
@@ -176,8 +176,7 @@ class PyClipCounterUI:
 
     def copyNextClip(self):
         newIndex = self.clipIndex + 1
-        if self.useTemplate:
-            self.setClipIndexTemplate(newIndex)
+        if self.useTemplate and self.setClipIndexTemplate(newIndex):
             self.copyTemplateClip()
         else:
             self.setClipIndexTextFile(newIndex)
