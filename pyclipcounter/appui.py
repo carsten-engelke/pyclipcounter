@@ -4,6 +4,7 @@ import tkinter as tk
 from tkinter import filedialog
 import pygubu
 import pyperclip
+from pynput.keyboard import Key, Listener, KeyCode
 import os, math
 
 PROJECT_PATH = pathlib.Path(__file__).parent
@@ -37,7 +38,10 @@ class PyClipCounterUI:
         # Initiate variable listeners
         self.var("countCurrent").trace_add("write", self.manualUpdateTemplateIndex)
         self.obj("ListBox").bind("<<ListboxSelect>>", self.manualUpdateTextFileIndex)
-
+        #Initiate keyboard listener
+        #not working yet, eigener thread?
+        clipboardKeyListener = Listener(on_press=self.presskey)
+        clipboardKeyListener.start()
 
     def run(self):
         self.mainwindow.mainloop()
@@ -48,15 +52,20 @@ class PyClipCounterUI:
     def var(self, id):
         return self.builder.get_variable(id)
 
+    def presskey(self, key):
+        # if str+v is pressed
+        if self.var("isAutomaticallyNext").get() and key == KeyCode(char=chr(22)):
+            self.copyNextClip()
+
     #working but throwing exception when empty entry.
     def manualUpdateTemplateIndex(s, index, mode, caller):
-        print(str(s) + " index:" + str(index) + " mode:" + str(mode) + " caller:" + str(caller) + " newValue:" + str(s.var("countCurrent").get()))
         if s.var("countCurrent").get() != "":
             s.clipIndex = s.var("countCurrent").get()
+
         
     #still not working properly todo: repair!
     def manualUpdateTextFileIndex(s, event):
-        s.clipIndex = s.obj("ListBox").curselection[0]
+        s.clipIndex = s.obj("ListBox").curselection()[0]
 
 
     def loadTextFile(self):
@@ -90,6 +99,7 @@ class PyClipCounterUI:
                 except:
                     print("failed" + str(child))
             self.obj("ListBox").configure(state=tk.DISABLED)
+            self.setClipIndexTemplate(int(self.var("countCurrent").get()))
         else:
             self.useTemplate = False
             templateFrame = self.builder.get_object("TemplateFrame")
@@ -116,13 +126,19 @@ class PyClipCounterUI:
             self.var("countCurrent").set(self.var("countStart").get())
 
     def setClipIndexTextFile(self, newIndex):
-        if len(self.var("textClips").get()) > 0:
-            if newIndex < len(self.var("textClips").get()):
-                self.clipIndex = newIndex
-                self.obj("ListBox").activate(newIndex)
-            else: 
-                self.clipIndex = len(self.var("textClips").get()) - 1
-                self.obj("ListBox").activate(newIndexlen(self.var("textClips").get()) - 1)
+        if self.obj("ListBox").size() > 0:
+            self.obj("ListBox").selection_clear(0, tk.END)
+            if newIndex < self.obj("ListBox").size():
+                if newIndex >= 0:
+                    self.clipIndex = newIndex
+                    self.obj("ListBox").selection_set(newIndex)
+                else:
+                    self.clipIndex = 0
+                    self.obj("ListBox").selection_set(0)
+            else:
+                self.clipIndex = self.obj("ListBox").size() - 1
+                self.obj("ListBox").selection_set(self.obj("ListBox").size() - 1)
+                
 
     def copyTemplateClip(self):
         s = self.var("clipTemplate").get()
@@ -135,8 +151,7 @@ class PyClipCounterUI:
         
 
     def copyTextClip(self):
-        s = self.var("textClips").get()
-        print (s)
+        s = self.obj("ListBox").get(self.clipIndex)
         pyperclip.copy(s)
 
 
