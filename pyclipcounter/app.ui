@@ -353,7 +353,7 @@
           </object>
         </child>
         <child>
-          <object class="ttk.Checkbutton" id="Checkbutton2">
+          <object class="ttk.Checkbutton" id="chkAutomatic" named="True">
             <property name="text" translatable="yes">Automatically put next Clip after Paste from Clipboard</property>
             <property name="variable">boolean:isAutomaticallyNext</property>
             <layout manager="grid">

@@ -4,6 +4,7 @@ import tkinter as tk
 from tkinter import filedialog
 import pygubu
 import pyperclip
+import pynput.keyboard as KeyBoard
 from pynput.keyboard import Key, Listener, KeyCode
 import os, math, time
 
@@ -39,9 +40,11 @@ class PyClipCounterUI:
         self.var("countCurrent").trace_add("write", self.manualUpdateTemplateIndex)
         self.obj("ListBox").bind("<<ListboxSelect>>", self.manualUpdateTextFileIndex)
         #Initiate keyboard listener
-        #not working yet, eigener thread?
         clipboardKeyListener = Listener(on_press=self.presskey)
         clipboardKeyListener.start()
+        if os.name == "posix":
+            self.obj("chkAutomatic").configure(state=tk.DISABLED)
+            self.var("isAutomaticallyNext").set(False)
 
     def run(self):
         self.mainwindow.mainloop()
@@ -53,6 +56,7 @@ class PyClipCounterUI:
         return self.builder.get_variable(id)
 
     def presskey(self, key):
+        #not working on linuxx yet as pynput is not compatible -> windows only
         if self.var("isAutomaticallyNext").get() and key == KeyCode(char=chr(22)):
             time.sleep(0.1)
             self.copyNextClip()
