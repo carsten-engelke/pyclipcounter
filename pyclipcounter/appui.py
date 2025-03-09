@@ -5,7 +5,7 @@ from tkinter import filedialog
 import pygubu
 import pyperclip
 from pynput.keyboard import Key, Listener, KeyCode
-import os, math
+import os, math, time
 
 PROJECT_PATH = pathlib.Path(__file__).parent
 PROJECT_UI = PROJECT_PATH / "app.ui"
@@ -53,17 +53,16 @@ class PyClipCounterUI:
         return self.builder.get_variable(id)
 
     def presskey(self, key):
-        # if str+v is pressed
         if self.var("isAutomaticallyNext").get() and key == KeyCode(char=chr(22)):
+            time.sleep(0.1)
             self.copyNextClip()
 
-    #working but throwing exception when empty entry.
+
     def manualUpdateTemplateIndex(s, index, mode, caller):
         if s.var("countCurrent").get() != "":
-            s.clipIndex = s.var("countCurrent").get()
+            s.clipIndex = int(s.var("countCurrent").get())
 
         
-    #still not working properly todo: repair!
     def manualUpdateTextFileIndex(s, event):
         s.clipIndex = s.obj("ListBox").curselection()[0]
 
@@ -107,22 +106,22 @@ class PyClipCounterUI:
                 try:
                     child.configure(state=tk.DISABLED)
                 except:
-                    print("failed:" + str(child))
+                    continue
             self.obj("ListBox").configure(state=tk.NORMAL)
 
     def unloadTextFile(self):
         self.switchUseTemplate(True)
 
     def setClipIndexTemplate(self, newIndex):
-        if newIndex >= self.var("countStart").get():
-            if newIndex <= self.var("countEnd").get():
+        if newIndex >= int(self.var("countStart").get()):
+            if newIndex <= int(self.var("countEnd").get()):
                 self.clipIndex = newIndex
-                self.var("countCurrent").set(newIndex)
+                self.var("countCurrent").set(str(newIndex))
             else:
-                self.clipIndex = self.var("countEnd").get()
+                self.clipIndex = int(self.var("countEnd").get())
                 self.var("countCurrent").set(self.var("countEnd").get())
         else:
-            self.clipIndex = self.var("countStart").get()
+            self.clipIndex = int(self.var("countStart").get())
             self.var("countCurrent").set(self.var("countStart").get())
 
     def setClipIndexTextFile(self, newIndex):
@@ -144,7 +143,7 @@ class PyClipCounterUI:
         s = self.var("clipTemplate").get()
         snumber = str(self.clipIndex)
         if self.var("isUsingLeadingZeroes").get():
-            maxlen = math.floor(math.log10(self.var("countEnd").get()))
+            maxlen = math.floor(math.log10(int(self.var("countEnd").get())))
             snumber = (maxlen - math.floor(math.log10(self.clipIndex))) * "0" + str(self.clipIndex)
         s = s.replace("<>", snumber)
         pyperclip.copy(s)
@@ -176,7 +175,8 @@ class PyClipCounterUI:
 
     def copyNextClip(self):
         newIndex = self.clipIndex + 1
-        if self.useTemplate and self.setClipIndexTemplate(newIndex):
+        if self.useTemplate:
+            self.setClipIndexTemplate(newIndex)
             self.copyTemplateClip()
         else:
             self.setClipIndexTextFile(newIndex)
